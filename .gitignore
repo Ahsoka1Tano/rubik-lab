@@ -1,0 +1,10 @@
+node_modules/
+dist/
+public/pyodide/
+.pnpm-store/
+.cache/
+coverage/
+*.local
+.env
+.env.*
+!.env.example
