@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { facelets, isSolved, parseMoves, scramble, type CubeAction, type Move } from '../core/cube'
+import { isSolved, parseMoves, scramble, type CubeAction, type Move } from '../core/cube'
 import { Timeline, type Frame } from '../core/timeline'
 import { runPython, stopPython } from '../python/client'
 import type { RunEvent } from '../python/protocol'
@@ -131,8 +131,6 @@ export const cubeControls = {
   redo() {
     if (!current && !useLab.getState().playing) enqueue(timeline.redo())
   },
-  snapshot: () => facelets(timeline.board),
-  moveHistory: () => timeline.history.slice(0, timeline.cursor),
 }
 
 function receive(event: RunEvent) {

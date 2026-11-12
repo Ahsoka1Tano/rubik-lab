@@ -3,9 +3,9 @@ import { Maximize2, Minimize2, Minus } from 'lucide-react'
 
 type Bounds = { left: number; top: number; width: number; height: number }
 
-export function FloatingWindow({ title, icon, label, kind, open, foreground, onFocus, onCollapse, children }: {
-  title: string; icon: ReactNode; label: string; kind: string; open: boolean; foreground: boolean
-  onFocus: () => void; onCollapse: () => void; children: ReactNode
+export function FloatingWindow({ title, icon, label, kind, open, onCollapse, children }: {
+  title: string; icon: ReactNode; label: string; kind: string; open: boolean
+  onCollapse: () => void; children: ReactNode
 }) {
   const ref = useRef<HTMLElement>(null)
   const [bounds, setBounds] = useState<Bounds>()
@@ -64,8 +64,8 @@ export function FloatingWindow({ title, icon, label, kind, open, foreground, onF
   const clear = () => { drag.current = null }
   const gesture = { onPointerMove: update, onPointerUp: clear, onPointerCancel: clear, onLostPointerCapture: clear }
   return <section
-    ref={ref} aria-label={title} hidden={!open} onFocus={onFocus} onPointerDown={onFocus}
-    className={`floating-window ${kind} ${maximized ? 'maximized' : ''} ${foreground ? 'foreground' : ''}`}
+    ref={ref} aria-label={title} hidden={!open}
+    className={`floating-window ${kind} ${maximized ? 'maximized' : ''}`}
     style={maximized ? undefined : bounds}
   >
     <header className="window-titlebar" onPointerDown={event => begin(event, 'move')} {...gesture}>

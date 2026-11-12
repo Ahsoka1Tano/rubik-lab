@@ -1,11 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import {
   ArrowUpToLine, BookOpen, Box, Check, Code2, Crosshair, History, Mouse,
-  Redo2, RotateCcw, Shuffle, Sparkles, Undo2, X,
+  Redo2, RotateCcw, Shuffle, Undo2, X,
 } from 'lucide-react'
 import CubeScene from './components/CubeScene/CubeScene'
 import { FloatingWindow } from './components/FloatingWindow'
-import { Mentor } from './components/Mentor'
 import { EditorPanel } from './components/PythonEditor/EditorPanel'
 import { newScript, readWorkspace, saveWorkspace } from './components/PythonEditor/files'
 import { FACES } from './core/cube'
@@ -23,8 +22,6 @@ export default function App() {
   const [workspace, setWorkspace] = useState(readWorkspace)
   const [saved, setSaved] = useState(true)
   const [editorOpen, setEditorOpen] = useState(true)
-  const [mentorOpen, setMentorOpen] = useState(false)
-  const [foreground, setForeground] = useState<'editor' | 'mentor'>('editor')
   const [panel, setPanel] = useState<Panel>()
   const [cameraReset, setCameraReset] = useState(0)
   const [suffix, setSuffix] = useState<'' | "'" | '2'>('')
@@ -82,10 +79,6 @@ export default function App() {
       </div>
       <div className="header-actions">
         <button type="button" className="header-button api-button" onClick={() => togglePanel('api')} aria-pressed={panel === 'api'} aria-label="Python API"><BookOpen size={16} /><span>Python API</span></button>
-        <button type="button" className="header-button mentor-button" onClick={() => {
-          setMentorOpen(!mentorOpen)
-          if (!mentorOpen) setForeground('mentor')
-        }} aria-pressed={mentorOpen}><Sparkles size={16} /><span>AI Mentor</span></button>
       </div>
     </header>
 
@@ -118,7 +111,7 @@ export default function App() {
         </div>
       </div>
 
-      <FloatingWindow title="Python Editor" icon={<Code2 size={17} />} label="WORKSPACE" kind="python-window" open={editorOpen} foreground={foreground === 'editor'} onFocus={() => setForeground('editor')} onCollapse={() => setEditorOpen(false)}>
+      <FloatingWindow title="Python Editor" icon={<Code2 size={17} />} label="WORKSPACE" kind="python-window" open={editorOpen} onCollapse={() => setEditorOpen(false)}>
         <EditorPanel files={workspace.files} script={script} saved={saved} onAdd={addFile} onRemove={removeFile}
           onSelect={name => setWorkspace(previous => ({ ...previous, active: name }))}
           onChange={(name, source) => setWorkspace(previous => {
@@ -128,14 +121,7 @@ export default function App() {
         />
       </FloatingWindow>
 
-      {!editorOpen && <button className="reopen-editor" onClick={() => {
-        setEditorOpen(true)
-        setForeground('editor')
-      }}><Code2 size={17} /> Python Editor <ArrowUpToLine size={14} /></button>}
-
-      <FloatingWindow title="AI Mentor" icon={<Sparkles size={16} />} label="LEARNING" kind="mentor-window" open={mentorOpen} foreground={foreground === 'mentor'} onFocus={() => setForeground('mentor')} onCollapse={() => setMentorOpen(false)}>
-        <Mentor script={script} />
-      </FloatingWindow>
+      {!editorOpen && <button className="reopen-editor" onClick={() => setEditorOpen(true)}><Code2 size={17} /> Python Editor <ArrowUpToLine size={14} /></button>}
 
       {panel && <section className={`popover ${panel}-popover`} aria-label={panel === 'api' ? 'Python API reference' : 'Move history'}>
         <header>{panel === 'api' ? <BookOpen size={16} /> : <History size={16} />}
